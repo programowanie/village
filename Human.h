@@ -13,9 +13,14 @@ private:
 	gender _gender;
 	long int birthdate, deathdate;
 	bool _isAlive;
+	int amountOfChildren;
+	bool _isPregnat; 
+	int lastChild;
 
 	// Rodzice
 	Human *father, *mother;
+
+	Human *_child;
 
 	// Cechy
 	float lechery, vitality, aggresivity;
@@ -31,9 +36,12 @@ public:
 	void die();
 	string story();
 	void thinkAboutDeath();
+	void meet(Human *);
 
 //	Akcesory	
 	string name();
 	enum gender gender();
 	bool isAlive();
+	bool isPregnat();
+	Human takeChild();
 };

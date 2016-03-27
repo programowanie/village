@@ -35,6 +35,12 @@ Human::Human(Human *father, Human *mother)
 		: Knowledge::currentTime() - rand() % 30 * YEAR;
 	deathdate = NULL;
 
+	// Zerujemy
+	amountOfChildren = 0;
+	_child = NULL;
+	_isPregnat = false;
+	lastChild = 0;
+
 	// Przyznajemy cechy
 	lechery = rand() % 100 / 100.;
 	vitality = rand() % 100 / 100.;
@@ -89,6 +95,47 @@ void Human::thinkAboutDeath()
 	_isAlive = howMuchIWantToDie != fate;
 }
 
+void Human::meet(Human *another)
+{
+	if (_gender != another -> _gender)
+	{
+		// Spójrzmy na różnicę wieku
+		int ageDifference = abs(age() - another -> age());
+		float ageFactor = ageDifference > 40 ? 0 : (40 - ageDifference) / 40.;
+
+		// Wyliczmy iloczyn rozwiązłości oraz atrakcyjności, rozumianej jako zdrowie
+		float factor = 
+			lechery * another -> lechery * 
+			vitality * another -> vitality *
+			ageFactor;
+		
+		// Sprawdzamy pecha
+		int badLuck = rand() % 1000;
+		bool pregnacy = badLuck < factor * 100;
+
+		// A może jednak aborcja?
+		if(age() < 15 || another -> age() < 15 || age() > 55 || another -> age() > 55)
+			pregnacy = false;
+
+		if(Knowledge::currentTime() - lastChild < MONTH * 9)
+			pregnacy = false;
+
+		// Poronienie
+		if(rand() % 100 < 90)
+			pregnacy = false;
+
+		if (pregnacy)
+		{
+			Human child(this,another);
+			amountOfChildren++;
+			another -> amountOfChildren++;
+
+			_child = &child;
+			_isPregnat = true;
+		}
+	}
+}
+
 #pragma mark [ Akcesory ]
 
 string Human::name()
@@ -104,4 +151,18 @@ gender Human::gender()
 bool Human::isAlive()
 {
 	return _isAlive;
+}
+
+bool Human::isPregnat()
+{
+	return _isPregnat;
+}
+
+Human Human::takeChild()
+{
+	Human childToGive = _child;
+	_child = NULL;
+	_isPregnat = false;
+	lastChild = Knowledge::currentTime();
+	return childToGive;
 }
