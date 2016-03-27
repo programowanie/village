@@ -12,7 +12,7 @@ private:
 	string _name;
 	gender _gender;
 	long int birthdate, deathdate;
-	bool alive;
+	bool _isAlive;
 
 	// Rodzice
 	Human *father, *mother;
@@ -29,8 +29,11 @@ public:
 	int age();
 	bool willDie();
 	void die();
+	string story();
+	void thinkAboutDeath();
 
 //	Akcesory	
 	string name();
 	enum gender gender();
+	bool isAlive();
 };

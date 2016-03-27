@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <fstream>
+#include <sstream>
 
 #pragma mark [ Metody klasy ]
 
@@ -40,12 +41,12 @@ Human::Human(Human *father, Human *mother)
 	aggresivity = rand() % 100 / 100.;
 
 	// Ożywiamy
-	alive = true;
+	_isAlive = true;
 }
 
 int Human::age()
 {
-	long long int time = (alive ? Knowledge::currentTime() : deathdate ) - birthdate;
+	long long int time = (_isAlive ? Knowledge::currentTime() : deathdate ) - birthdate;
 	return time / YEAR;
 }
 
@@ -53,13 +54,39 @@ bool Human::willDie()
 {
 	float chanceToDie = Knowledge::chanceToDie(_gender,age());
 	float fate = (rand() % 1000000) / 1000000.;
-	return fate < chanceToDie;
+	return !_isAlive || fate < chanceToDie;
 }
 
 void Human::die()
 {
 	deathdate = Knowledge::currentTime();
-	alive = false;
+	_isAlive = false;
+}
+
+string Human::story()
+{
+	ostringstream ss;
+	ss << _name;
+	if (!_gender)
+		ss << ". Mężczyzna.";
+	else
+		ss << ". Kobieta.";
+	ss << " Rozwiązłość ";
+	ss << lechery*100;
+	ss << "%. Żywotność ";
+	ss << vitality*100;
+	ss << "%. Agresywność ";
+	ss << aggresivity*100;
+	ss << "%.";
+
+	return ss.str();
+}
+
+void Human::thinkAboutDeath()
+{
+	float howMuchIWantToDie = rand() % 2000;
+	float fate = rand() % 2000;
+	_isAlive = howMuchIWantToDie != fate;
 }
 
 #pragma mark [ Akcesory ]
@@ -73,3 +100,8 @@ gender Human::gender()
 {
 	return _gender;
 }	
+
+bool Human::isAlive()
+{
+	return _isAlive;
+}

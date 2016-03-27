@@ -9,26 +9,55 @@ int main(int argc, char const *argv[])
 {
 	Knowledge::init();
 
-	vector <Human> villagers = Human::createSettlers(10);	// Mieszkańcy
+	vector <Human> villagers = Human::createSettlers(100);	// Mieszkańcy
 	vector <Human> graveyard;								// i nieboszczyki
 
 	// Pętla kolejnych dni
 	do
 	{
-		// Przywitajmy nowy dzień
 		int time = Knowledge::currentTime();
-		printf("\n# Mamy dziś: %02i / %02i / %02i\n",
+		char timestamp[128];
+		sprintf(timestamp, "[%02i/%02i/%02i]",
 			time % MONTH + 1,
 			(time / MONTH) % 12 + 1,
 			time / YEAR + 1);
 
-		printf("  W wiosce żyje %i mieszkańców. Na cmentarzu mamy %i kwater.\n",
-			(int) villagers.size(),
-			(int) graveyard.size() );
+		// Nowy rok?
+		if (time % YEAR == 0)
+		{
+			printf("  %s Świętujemy Nowy Rok. Rok %i. W wiosce żyje %i mieszkańców.\n",
+				timestamp,
+				time / YEAR + 1,
+				(int) villagers.size());
+		}
 
 		// Spójrzmy co u naszych mieszkańców
 		for (int i = 0; i < villagers.size(); ++i)
 		{
+			// Spotkanie. Każdy raz dziennie kogoś spotyka.
+			if (villagers.size())
+			{
+				int whom = rand() % villagers.size();
+				// Co jeśli spotkam siebie?
+				if (whom == i)
+				{
+					// Pomyślę o śmierci
+					villagers[i].thinkAboutDeath();
+					// I może postanowię umrzeć.
+					if (!villagers[i].isAlive())
+					{
+						printf("\t%s postanawia umrzeć.\n", villagers[i].name().c_str());
+					}
+				}
+				else
+				{
+					//printf("\t%s spotyka %s\n", 
+					//	villagers[i].name().c_str(),
+					//	villagers[whom].name().c_str());
+				}
+			}
+
+
 			// Kto dziś umrze?
 			if (villagers[i].willDie())
 			{
@@ -39,25 +68,25 @@ int main(int argc, char const *argv[])
 				graveyard.push_back(villagers[i]);
 
 				// Wydrukujmy nekrolog
-				printf("! W wieku lat %i umiera dziś %s.\n",
+				printf("\tW wieku lat %i umiera %s\n",
 					villagers[i].age(),
-					villagers[i].name().c_str()
+					villagers[i].story().c_str()
 				);
 
 				// I zapomnijmy, że byłeś
 				villagers.erase(villagers.begin()+i);
 			}
+
+			
+			/* code */
+			//}
 		}
 
-		//printf("  Na cmentarzu: %i\n", (int) graveyard.size());
-		//for (int i = 0; i < graveyard.size(); ++i)
-		//	introduce(&graveyard[i]);
-
-		Knowledge::tick();
-
-		if (!villagers.size())
+		// Zacznijmy nowy dzień
+		if (villagers.size()) Knowledge::tick();
+		else
 		{
-			printf("\n\n- Po %i latach istnienia, nasza wioska wymarła. Trochę smutno.\n", time / YEAR + 1);
+			printf("  %s Po %i latach istnienia, nasza wioska wymarła. Garść statystyk:\n\n", timestamp, time / YEAR + 1);
 			break;
 		}
 	} while (Knowledge::currentTime() < 360 * 100);
