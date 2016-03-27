@@ -4,7 +4,10 @@
 #include <stdio.h>
 #include <string>
 #include "structs.h"
-#include "Human.h"
+
+#define YEAR 360
+#define MONTH 30
+#define DAY 1
 
 using namespace std;
 
@@ -16,9 +19,11 @@ private:
 
 public:
 	static void init();
+	static void tick() { _currentTime++; }
 
 //	Generatory
 	static string name(gender);
+	static float chanceToDie(gender gender, int age);
 
 //	Akcesory	
 	static long long int currentTime() { return _currentTime; }

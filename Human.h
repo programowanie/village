@@ -8,20 +8,21 @@ using namespace std;
 class Human
 {
 private:
-	string name;
-	gender gender;
+	string _name;
+	gender _gender;
 	long int birthdate;
 	Human *father, *mother;
 
 public:
 //	Metody klasy
-	static Human* createSettlers(int n);
+	static vector <Human> createSettlers(int n);
 
 //	Metody obiektu
 	Human(Human *father = NULL, Human *mother = NULL);
 	int age();
+	bool willDie();
 
 //	Akcesory	
-	string getName();
-	enum gender getGender();
+	string name();
+	enum gender gender();
 };

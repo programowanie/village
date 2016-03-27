@@ -3,11 +3,11 @@
 #include <stdio.h>
 #include <fstream>
 
-#define YEAR 31536000
-
-Human* Human::createSettlers(int n)
+vector <Human> Human::createSettlers(int n)
 {
-	Human *settlers = new Human[n];
+	vector <Human> settlers;
+	Human *_settlers = new Human[n];
+	copy(&_settlers[0], &_settlers[n], back_inserter(settlers));
 	return settlers;	
 }
 
@@ -18,10 +18,10 @@ Human::Human(Human *father, Human *mother)
 	this -> mother = mother;
 
 	// Wylosujmy płeć
-	gender = rand() % 2 == 0 ? male : female;
+	_gender = rand() % 2 == 0 ? male : female;
 	
 	// Nadajmy imię
-	name = Knowledge::name(gender);
+	_name = Knowledge::name(_gender);
 
 	// Ustalamy wiek
 	birthdate = mother != NULL
@@ -35,12 +35,19 @@ int Human::age()
 	return time / YEAR;
 }
 
-string Human::getName()
+bool Human::willDie()
 {
-	return name;
+	float chanceToDie = Knowledge::chanceToDie(_gender,age());
+	float fate = (rand() % 1000000) / 1000000.;
+	return fate < chanceToDie;
 }
 
-gender Human::getGender()
+string Human::name()
 {
-	return gender;
+	return _name;
+}
+
+gender Human::gender()
+{
+	return _gender;
 }	

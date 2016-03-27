@@ -29,3 +29,12 @@ string Knowledge::name(gender gender)
 {
 	return names[gender][rand() % names[gender].size()];
 }
+
+float Knowledge::chanceToDie(gender gender, int age)
+{
+	if(age < 5) 		return .001;
+	else if(age < 20)	return .0001;
+	else if(age < 50)	return .00001;
+	else if(age < 100)	return .0001;
+	else				return .001;
+}
