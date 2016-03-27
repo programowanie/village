@@ -3,6 +3,7 @@
 using namespace std;
 
 vector <string> Knowledge::names[2];
+long long int Knowledge::_currentTime = 0;
 
 void Knowledge::init()
 {

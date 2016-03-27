@@ -10,14 +10,18 @@ class Human
 private:
 	string name;
 	gender gender;
+	long int birthdate;
 	Human *father, *mother;
+
 public:
+//	Metody klasy
 	static Human* createSettlers(int n);
 
-	Human();
-//	~Human();
-	string getName();
-	enum gender getGender();	
+//	Metody obiektu
+	Human(Human *father = NULL, Human *mother = NULL);
+	int age();
 
-	
+//	Akcesory	
+	string getName();
+	enum gender getGender();
 };
