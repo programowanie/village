@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <fstream>
 
+#pragma mark [ Metody klasy ]
+
 vector <Human> Human::createSettlers(int n)
 {
 	vector <Human> settlers;
@@ -10,6 +12,9 @@ vector <Human> Human::createSettlers(int n)
 	copy(&_settlers[0], &_settlers[n], back_inserter(settlers));
 	return settlers;	
 }
+
+
+#pragma mark [ Metody obiektu ]
 
 Human::Human(Human *father, Human *mother)
 {
@@ -26,12 +31,21 @@ Human::Human(Human *father, Human *mother)
 	// Ustalamy wiek
 	birthdate = mother != NULL
 		? Knowledge::currentTime()
-		: Knowledge::currentTime() - 15 * YEAR - rand() % 15 * YEAR;
+		: Knowledge::currentTime() - rand() % 30 * YEAR;
+	deathdate = NULL;
+
+	// Przyznajemy cechy
+	lechery = rand() % 100 / 100.;
+	vitality = rand() % 100 / 100.;
+	aggresivity = rand() % 100 / 100.;
+
+	// Ożywiamy
+	alive = true;
 }
 
 int Human::age()
 {
-	long long int time = Knowledge::currentTime() - birthdate;
+	long long int time = (alive ? Knowledge::currentTime() : deathdate ) - birthdate;
 	return time / YEAR;
 }
 
@@ -41,6 +55,14 @@ bool Human::willDie()
 	float fate = (rand() % 1000000) / 1000000.;
 	return fate < chanceToDie;
 }
+
+void Human::die()
+{
+	deathdate = Knowledge::currentTime();
+	alive = false;
+}
+
+#pragma mark [ Akcesory ]
 
 string Human::name()
 {

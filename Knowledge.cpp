@@ -32,9 +32,9 @@ string Knowledge::name(gender gender)
 
 float Knowledge::chanceToDie(gender gender, int age)
 {
-	if(age < 5) 		return .001;
-	else if(age < 20)	return .0001;
-	else if(age < 50)	return .00001;
-	else if(age < 100)	return .0001;
-	else				return .001;
+	if(age < 5) 		return .002;
+	else if(age < 25)	return .0002;
+	else if(age < 50)	return .00002;
+	else if(age < 75)	return .0002;
+	else				return .002;
 }

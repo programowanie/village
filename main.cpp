@@ -5,60 +5,69 @@
 #include "Human.h"
 #include "Knowledge.h"
 
-void introduce(Human *);
-void showTime();
-
 int main(int argc, char const *argv[])
 {
 	Knowledge::init();
 
-	vector <Human> villagers = Human::createSettlers(30);
-	vector <Human> graveyard;
+	vector <Human> villagers = Human::createSettlers(10);	// Mieszkańcy
+	vector <Human> graveyard;								// i nieboszczyki
 
-	// Zabijanie ludzi
-
+	// Pętla kolejnych dni
 	do
 	{
-		// Pokaż 
-		showTime();
+		// Przywitajmy nowy dzień
+		int time = Knowledge::currentTime();
+		printf("\n# Mamy dziś: %02i / %02i / %02i\n",
+			time % MONTH + 1,
+			(time / MONTH) % 12 + 1,
+			time / YEAR + 1);
 
-		// Życie mieszkańców
-		printf("  Mieszkańcy (%i):\n", (int) villagers.size());
+		printf("  W wiosce żyje %i mieszkańców. Na cmentarzu mamy %i kwater.\n",
+			(int) villagers.size(),
+			(int) graveyard.size() );
+
+		// Spójrzmy co u naszych mieszkańców
 		for (int i = 0; i < villagers.size(); ++i)
 		{
-			introduce(&villagers[i]);
+			// Kto dziś umrze?
 			if (villagers[i].willDie())
 			{
-				printf("\t  pora umierać\n");
+				// Odbierzmy Ci życie
+				villagers[i].die();
+
 				// Połóżmy Cię na cmentarz
 				graveyard.push_back(villagers[i]);
+
+				// Wydrukujmy nekrolog
+				printf("! W wieku lat %i umiera dziś %s.\n",
+					villagers[i].age(),
+					villagers[i].name().c_str()
+				);
+
 				// I zapomnijmy, że byłeś
 				villagers.erase(villagers.begin()+i);
 			}
 		}
 
-		printf("  Na cmentarzu: %i\n", (int) graveyard.size());
-		for (int i = 0; i < graveyard.size(); ++i)
-			introduce(&graveyard[i]);
+		//printf("  Na cmentarzu: %i\n", (int) graveyard.size());
+		//for (int i = 0; i < graveyard.size(); ++i)
+		//	introduce(&graveyard[i]);
 
 		Knowledge::tick();
-	} while (Knowledge::currentTime() < 360 * 50);
+
+		if (!villagers.size())
+		{
+			printf("\n\n- Po %i latach istnienia, nasza wioska wymarła. Trochę smutno.\n", time / YEAR + 1);
+			break;
+		}
+	} while (Knowledge::currentTime() < 360 * 100);
+
+	// Statystyki na koniec
+	float avg_lifetime = 0;
+	for (int i = 0; i < graveyard.size(); ++i)
+		avg_lifetime += graveyard[i].age();
+	avg_lifetime /= graveyard.size();
+	printf("- Średnia długość życia wyniosła %.0f lat\n", avg_lifetime);
 
 	return 0;
-}
-
-void introduce(Human *human)
-{
-	printf("\t%s, %i lat\n",
-			human -> name().c_str(),
-			human -> age());
-}
-
-void showTime()
-{
-	int time = Knowledge::currentTime();
-	printf("\n# Mamy dziś: %02i / %02i / %02i\n",
-			time % MONTH + 1,
-			(time / MONTH) % 12 + 1,
-			time / YEAR + 1);
 }
