@@ -1,1 +1,3 @@
 # Symulator społeczeństwa wioski
+
+Nothing.
