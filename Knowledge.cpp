@@ -34,7 +34,7 @@ float Knowledge::chanceToDie(gender gender, int age)
 {
 	if(age < 5) 		return .002;
 	else if(age < 25)	return .0002;
-	else if(age < 50)	return .00002;
-	else if(age < 75)	return .0002;
+	else if(age < 40)	return .00002;
+	else if(age < 55)	return .0002;
 	else				return .002;
 }

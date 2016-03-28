@@ -15,12 +15,14 @@ int main(int argc, char const *argv[])
 	vector <Human> villagers = Human::createSettlers(amount_of_settlers);	// Mieszkańcy
 	vector <Human> graveyard;												// i nieboszczyki
 
+	int born = 0, died = 0; // Statystyki
+
 	// Pętla kolejnych dni
 	do
 	{
 		int time = Knowledge::currentTime();
 		char timestamp[128];
-		sprintf(timestamp, "[%02i/%02i/%02i]",
+		sprintf(timestamp, "[%02i/%02i/%04i]",
 			time % MONTH + 1,
 			(time / MONTH) % 12 + 1,
 			time / YEAR + 1);
@@ -32,11 +34,15 @@ int main(int argc, char const *argv[])
 			for (int i = 0; i < villagers.size(); ++i)
 				avg_lifetime += villagers[i].age();
 			avg_lifetime /= villagers.size();
-			printf("  %s Świętujemy Nowy Rok. Rok %i. W wiosce żyje %i mieszkańców, o średniej wieku %.0f lat.\n",
+			printf("  %s %5i villagers [+%3i, -%3i], avg. age %.0f yrs. \t%5.0f\n",
 				timestamp,
-				time / YEAR + 1,
 				(int) villagers.size(),
-				avg_lifetime);
+				born,
+				died,
+				avg_lifetime,
+				((float) born-died) / (float) villagers.size()*1000);
+			born = 0;
+			died = 0;
 		}
 
 		// Spójrzmy co u naszych mieszkańców
@@ -71,6 +77,7 @@ int main(int argc, char const *argv[])
 							newHuman.name().c_str());*/
 
 						villagers.push_back(newHuman);
+						born++;
 					}
 					//printf("\t%s spotyka %s\n", 
 					//	villagers[i].name().c_str(),
@@ -83,6 +90,7 @@ int main(int argc, char const *argv[])
 			{
 				// Odbierzmy Ci życie
 				villagers[i].die();
+				died++;
 
 				// Połóżmy Cię na cmentarz
 				graveyard.push_back(villagers[i]);
@@ -109,12 +117,16 @@ int main(int argc, char const *argv[])
 	while (Knowledge::currentTime() < YEAR * years_of_simulation);
 
 	// Statystyki na koniec
-	printf("Garść statystyk:\n");
 	float avg_lifetime = 0;
 	for (int i = 0; i < graveyard.size(); ++i)
 		avg_lifetime += graveyard[i].age();
 	avg_lifetime /= graveyard.size();
+	Human lastPerson = graveyard.back();
+
+	printf("Garść statystyk:\n");
 	printf("- Średnia długość życia wyniosła %.0f lat\n", avg_lifetime);
+	printf("- Na cmentarzu leży %i osób\n", (int) graveyard.size());
+	printf("- Ostatni mieszkaniec to %s\n", lastPerson.story().c_str());
 
 	return 0;
 }

@@ -34,7 +34,7 @@ Human::Human(Human *father, Human *mother)
 		? Knowledge::currentTime()
 		: Knowledge::currentTime() - rand() % 30 * YEAR;
 	deathdate = NULL;
-
+	
 	// Zerujemy
 	amountOfChildren = 0;
 	_child = NULL;
@@ -83,7 +83,12 @@ string Human::story()
 	ss << vitality*100;
 	ss << "%. Agresywność ";
 	ss << aggresivity*100;
-	ss << "%.";
+	ss << "%. Lat ";
+	ss << age();
+	ss << ". Ur. w roku ";
+	ss << birthdate / YEAR;
+	ss << ". Dzieci ";
+	ss << amountOfChildren;
 
 	return ss.str();
 }
