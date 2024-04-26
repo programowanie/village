@@ -13,7 +13,7 @@ int main(int argc, char const *argv[])
 	int amount_of_settlers = 100;
 
 	vector <Human> villagers = Human::createSettlers(amount_of_settlers);	// Mieszkańcy
-	vector <Human> graveyard;												// i nieboszczyki
+	vector <Human> graveyard;												// i dziady
 
 	int born = 0, died = 0; // Statystyki
 
@@ -27,7 +27,7 @@ int main(int argc, char const *argv[])
 			(time / MONTH) % 12 + 1,
 			time / YEAR + 1);
 
-		// Nowy rok?
+		// Nowy mamy rok?
 		if (time % YEAR == 0)
 		{
 			float avg_lifetime = 0;

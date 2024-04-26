@@ -22,10 +22,10 @@ public:
 	static void init();
 	static void tick() { _currentTime++; }
 
-//	Generatory
+	//	Generatory
 	static string name(gender);
 	static float chanceToDie(gender gender, int age);
 
-//	Akcesory	
+	//	Akcesory	
 	static long long int currentTime() { return _currentTime; }
 };
